@@ -82,22 +82,17 @@ namespace CGL {
     float x2, float y2,
     Color color) {
     // TODO: Task 1: Implement basic triangle rasterization here, no supersampling
+      //rasterize_line(x0, y0, x1, y1, color);
+      //rasterize_line(x1, y1, x2, y2, color);
+      //rasterize_line(x2, y2, x0, y0, color);
       int sqrt_sample = sqrt(sample_rate);
       float step = (float)1 / (sqrt_sample + 1);
-      
-      Vector3D z = (0, 0, 1);
 
-      Vector3D p1(x0, y0, 0);
-      Vector3D p2(x1, y1, 0);
-      Vector3D p3(x2, y2, 0);
+      Vector3D z(0, 0, 1), p1(x0, y0, 0), p2(x1, y1, 0), p3(x2, y2, 0);
 
-      Vector3D l1 = p1 - p2;
-      Vector3D l2 = p2 - p3;
-      Vector3D l3 = p3 - p1;
+      Vector3D l1 = p1 - p2, l2 = p2 - p3, l3 = p3 - p1;
 
-      Vector3D n1 = cross(z, l1);
-      Vector3D n2 = cross(z, l2);
-      Vector3D n3 = cross(z, l3);
+      Vector3D n1 = cross(z, l1), n2 = cross(z, l2), n3 = cross(z, l3);
 
       int x_bounds[2]{};
       int y_bounds[2]{};
@@ -138,7 +133,48 @@ namespace CGL {
   {
     // TODO: Task 4: Rasterize the triangle, calculating barycentric coordinates and using them to interpolate vertex colors across the triangle
     // Hint: You can reuse code from rasterize_triangle
+      int sqrt_sample = sqrt(sample_rate);
+      float step = (float)1 / (sqrt_sample + 1);
 
+      Vector3D z(0, 0, 1), A(x0, y0, 0), B(x1, y1, 0), C(x2, y2, 0);
+
+      Vector3D AB = A - B, BC = B - C, CA = C - A;
+
+      Vector3D nAB = cross(z, AB), nBC = cross(z, BC), nCA = cross(z, CA);
+
+      Matrix3x3 M(x0, x1, x2, y0, y1, y2, 1, 1, 1);
+      Matrix3x3 M_inv = M.inv();
+
+      int x_bounds[2]{};
+      int y_bounds[2]{};
+      x_bounds[0] = floor(std::min({ x0, x1, x2 }));
+      x_bounds[1] = ceil(std::max({ x0, x1, x2 }));
+      y_bounds[0] = floor(std::min({ y0, y1, y2 }));
+      y_bounds[1] = ceil(std::max({ y0, y1, y2 }));
+      for (int x = x_bounds[0]; x < x_bounds[1]; x++) {
+          for (int y = y_bounds[0]; y < y_bounds[1]; y++) {
+              int w = 0;
+              for (int i = 0; i < sqrt_sample; i++) {
+                  for (int j = 0; j < sqrt_sample; j++) {
+                      float xt = (float)x + (((float)i + 1) * step);
+                      float yt = (float)y + (((float)j + 1) * step);
+                      Vector3D X(xt, yt, 1);
+
+                      Vector3D B_coords = M_inv * X;
+
+                      float dota = dot(X - B, nAB);
+                      float dotb = dot(X - C, nBC);
+                      float dotc = dot(X - A, nCA);
+                      if ((dota < 0) && (dotb < 0) && (dotc < 0) ||
+                          (dota > 0) && (dotb > 0) && (dotc > 0)) {
+                          Color c = B_coords.x * c0 + B_coords.y * c1 + B_coords.z * c2;
+                          fill_superpixel(x, y, w, c);
+                      }
+                      w++;
+                  }
+              }
+          }
+      }
 
 
   }
