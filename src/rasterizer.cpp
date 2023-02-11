@@ -16,6 +16,14 @@ namespace CGL {
     sample_buffer.resize(width * height * sample_rate, Color::White);
   }
 
+  void RasterizerImp::fill_superpixel(size_t x, size_t y, size_t w, Color c)
+  {
+      if (x < 0 || x >= width) return;
+      if (y < 0 || y >= height) return;
+
+      sample_buffer[(y * width + x)*sample_rate + w] = c;
+  }
+
   // Used by rasterize_point and rasterize_line
   void RasterizerImp::fill_pixel(size_t x, size_t y, Color c) {
     // TODO: Task 2: You might need to this function to fix points and lines (such as the black rectangle border in test4.svg)
@@ -23,7 +31,9 @@ namespace CGL {
     // It is sufficient to use the same color for all supersamples of a pixel for points and lines (not triangles)
 
 
-    sample_buffer[y * width + x] = c;
+    for (int k = 0; k < 3; ++k) {
+          this->rgb_framebuffer_target[3 * (y * width + x) + k] = (&c.r)[k] * 255;
+        }
   }
 
   // Rasterize a point: simple example to help you start familiarizing
@@ -38,8 +48,9 @@ namespace CGL {
     if (sx < 0 || sx >= width) return;
     if (sy < 0 || sy >= height) return;
 
-    fill_pixel(sx, sy, color);
-    return;
+    for (int i = 0; i < sample_rate; i++) {
+        fill_superpixel(sx, sy, i, color);
+    }
   }
 
   // Rasterize a line.
@@ -71,7 +82,49 @@ namespace CGL {
     float x2, float y2,
     Color color) {
     // TODO: Task 1: Implement basic triangle rasterization here, no supersampling
+      int sqrt_sample = sqrt(sample_rate);
+      float step = (float)1 / (sqrt_sample + 1);
+      
+      Vector3D z = (0, 0, 1);
 
+      Vector3D p1(x0, y0, 0);
+      Vector3D p2(x1, y1, 0);
+      Vector3D p3(x2, y2, 0);
+
+      Vector3D l1 = p1 - p2;
+      Vector3D l2 = p2 - p3;
+      Vector3D l3 = p3 - p1;
+
+      Vector3D n1 = cross(z, l1);
+      Vector3D n2 = cross(z, l2);
+      Vector3D n3 = cross(z, l3);
+
+      int x_bounds[2]{};
+      int y_bounds[2]{};
+      x_bounds[0] = floor(std::min({ x0, x1, x2 }));
+      x_bounds[1] = ceil(std::max({ x0, x1, x2 }));
+      y_bounds[0] = floor(std::min({ y0, y1, y2 }));
+      y_bounds[1] = ceil(std::max({ y0, y1, y2 }));
+      for (int x = x_bounds[0]; x < x_bounds[1]; x++) {
+          for (int y = y_bounds[0]; y < y_bounds[1]; y++) {
+              int w = 0;
+              for (int i = 0; i < sqrt_sample; i++) {
+                  for (int j = 0; j < sqrt_sample; j++) {
+                      float xt = (float)x + (((float)i + 1) * step);
+                      float yt = (float)y + (((float)j + 1) * step);
+                      Vector3D p(xt, yt, 0);
+                      float a = dot(p - p2, n1);
+                      float b = dot(p - p3, n2);
+                      float c = dot(p - p1, n3);
+                      if ((a < 0) && (b < 0) && (c < 0) ||
+                          (a > 0) && (b > 0) && (c > 0)) {
+                          fill_superpixel(x, y, w, color);
+                      }
+                      w++;
+                  }
+              }
+          }
+      }
     // TODO: Task 2: Update to implement super-sampled rasterization
 
 
@@ -111,7 +164,7 @@ namespace CGL {
     this->sample_rate = rate;
 
 
-    this->sample_buffer.resize(width * height, Color::White);
+    this->sample_buffer.resize(width * height * sample_rate, Color::White);
   }
 
 
@@ -125,7 +178,7 @@ namespace CGL {
     this->rgb_framebuffer_target = rgb_framebuffer;
 
 
-    this->sample_buffer.resize(width * height, Color::White);
+    this->sample_buffer.resize(width * height * sample_rate, Color::White);
   }
 
 
@@ -143,14 +196,16 @@ namespace CGL {
   void RasterizerImp::resolve_to_framebuffer() {
     // TODO: Task 2: You will likely want to update this function for supersampling support
 
-
     for (int x = 0; x < width; ++x) {
       for (int y = 0; y < height; ++y) {
-        Color col = sample_buffer[y * width + x];
-
-        for (int k = 0; k < 3; ++k) {
-          this->rgb_framebuffer_target[3 * (y * width + x) + k] = (&col.r)[k] * 255;
-        }
+          Color col = Color::Black;
+          for (int i = 0; i < sample_rate; i++) {
+                col += sample_buffer[(y * width + x)*sample_rate + i];
+          }
+          col.r /= sample_rate;
+          col.g /= sample_rate;
+          col.b /= sample_rate;
+          fill_pixel(x, y, col);
       }
     }
 

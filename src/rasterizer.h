@@ -84,6 +84,8 @@ namespace CGL {
     RasterizerImp(PixelSampleMethod psm, LevelSampleMethod lsm,
       size_t width, size_t height, unsigned int sample_rate);
 
+    void fill_superpixel(size_t x, size_t y, size_t, Color c);
+
 
     // Rasterize a point
     // P0 = (x, y)
@@ -95,7 +97,7 @@ namespace CGL {
     void rasterize_line(float x0, float y0,
       float x1, float y1,
       Color color);
-
+    
     // Rasterize a triangle
     // P0 = (x0, y0)
     // P1 = (x1, y1)
