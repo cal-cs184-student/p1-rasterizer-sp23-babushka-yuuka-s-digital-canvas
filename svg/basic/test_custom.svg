@@ -4,7 +4,7 @@
 <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
 	 width="200.0px" height="200.0px" viewBox="0 0 200 200" enable-background="new 0 0 200 200"
 	 xml:space="preserve">
-<colortri points="100 100 200 100 199.786 106.54" colors="0 0 0 1 1 0 0 1 1 0.0625 0 1 "/>
+<colortri points="0 200 100 0 200 200" colors="1 0 0 0 0 1 0 0 0 0 1 0 "/>
 
 
 </svg>
