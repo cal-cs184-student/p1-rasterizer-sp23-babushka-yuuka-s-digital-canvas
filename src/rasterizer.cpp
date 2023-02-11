@@ -190,7 +190,7 @@ namespace CGL {
     // Hint: You can reuse code from rasterize_triangle/rasterize_interpolated_color_triangle
       /*int sqrt_sample = sqrt(sample_rate);
       float step = (float)1 / (sqrt_sample + 1);
-
+      <colortri points="0 0 100 200 100 200 0" colors="0 1 1 0 1 1 0 1 1 1 0 1 "/>
       Vector3D z(0, 0, 1), A(x0, y0, 0), B(x1, y1, 0), C(x2, y2, 0);
 
       Vector3D AB = A - B, BC = B - C, CA = C - A;
