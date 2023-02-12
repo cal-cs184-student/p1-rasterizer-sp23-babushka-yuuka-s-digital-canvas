@@ -96,10 +96,10 @@ namespace CGL {
 
       int x_bounds[2]{};
       int y_bounds[2]{};
-      x_bounds[0] = floor(std::min({ x0, x1, x2 }));
-      x_bounds[1] = ceil(std::max({ x0, x1, x2 }));
-      y_bounds[0] = floor(std::min({ y0, y1, y2 }));
-      y_bounds[1] = ceil(std::max({ y0, y1, y2 }));
+      x_bounds[0] = floor(min({ x0, x1, x2 }));
+      x_bounds[1] = ceil(max({ x0, x1, x2 }));
+      y_bounds[0] = floor(min({ y0, y1, y2 }));
+      y_bounds[1] = ceil(max({ y0, y1, y2 }));
       for (int x = x_bounds[0]; x < x_bounds[1]; x++) {
           for (int y = y_bounds[0]; y < y_bounds[1]; y++) {
               int w = 0;
@@ -147,10 +147,10 @@ namespace CGL {
 
       int x_bounds[2]{};
       int y_bounds[2]{};
-      x_bounds[0] = floor(std::min({ x0, x1, x2 }));
-      x_bounds[1] = ceil(std::max({ x0, x1, x2 }));
-      y_bounds[0] = floor(std::min({ y0, y1, y2 }));
-      y_bounds[1] = ceil(std::max({ y0, y1, y2 }));
+      x_bounds[0] = floor(min({ x0, x1, x2 }));
+      x_bounds[1] = ceil(max({ x0, x1, x2 }));
+      y_bounds[0] = floor(min({ y0, y1, y2 }));
+      y_bounds[1] = ceil(max({ y0, y1, y2 }));
       for (int x = x_bounds[0]; x < x_bounds[1]; x++) {
           for (int y = y_bounds[0]; y < y_bounds[1]; y++) {
               int w = 0;
@@ -202,10 +202,10 @@ namespace CGL {
 
       int x_bounds[2]{};
       int y_bounds[2]{};
-      x_bounds[0] = floor(std::min({ x0, x1, x2 }));
-      x_bounds[1] = ceil(std::max({ x0, x1, x2 }));
-      y_bounds[0] = floor(std::min({ y0, y1, y2 }));
-      y_bounds[1] = ceil(std::max({ y0, y1, y2 }));
+      x_bounds[0] = floor(min({ x0, x1, x2 }));
+      x_bounds[1] = ceil(max({ x0, x1, x2 }));
+      y_bounds[0] = floor(min({ y0, y1, y2 }));
+      y_bounds[1] = ceil(max({ y0, y1, y2 }));
       for (int x = x_bounds[0]; x < x_bounds[1]; x++) {
           for (int y = y_bounds[0]; y < y_bounds[1]; y++) {
               int w = 0;
@@ -224,6 +224,7 @@ namespace CGL {
                           (dota > 0) && (dotb > 0) && (dotc > 0)) {
                           
                           Vector3D tex_coord = Mtex * B_coords;
+
                           Color c(Color(1, 0, 1));
                           switch (psm)
                           {

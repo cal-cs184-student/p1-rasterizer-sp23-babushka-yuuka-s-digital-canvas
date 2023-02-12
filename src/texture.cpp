@@ -29,7 +29,7 @@ namespace CGL {
   Color Texture::sample_nearest(Vector2D uv, int level) {
     // TODO: Task 5: Fill this in.
     auto& mip = mipmap[level];
-    float x(std::round(uv.x)*this->width), y(std::round(uv.y)*this->height);
+    float x(round(uv.x * (mip.width - 1))), y(round(uv.y * (mip.height - 1)));
     if (x < 0 || x >= this->width) return Color(1, 0, 1);
     if (y < 0 || y >= this->height) return Color(1, 0, 1);
 
@@ -42,7 +42,7 @@ namespace CGL {
   Color Texture::sample_bilinear(Vector2D uv, int level) {
     // TODO: Task 5: Fill this in.
     auto& mip = mipmap[level];
-    float x(uv.x), y(uv.y);
+    float x(uv.x * (mip.width - 1)), y(uv.y * (mip.height - 1));
     if (x < 0 || x >= this->width) goto fail;
     if (y < 0 || y >= this->height) goto fail;
     Color c(Color(0, 0, 0));
