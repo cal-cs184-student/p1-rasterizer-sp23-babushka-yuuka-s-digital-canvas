@@ -29,21 +29,33 @@ namespace CGL {
   Color Texture::sample_nearest(Vector2D uv, int level) {
     // TODO: Task 5: Fill this in.
     auto& mip = mipmap[level];
-
+    float x(std::round(uv.x)*this->width), y(std::round(uv.y)*this->height);
+    if (x < 0 || x >= this->width) return Color(1, 0, 1);
+    if (y < 0 || y >= this->height) return Color(1, 0, 1);
 
 
 
     // return magenta for invalid level
-    return Color(1, 0, 1);
+    return mip.get_texel(x, y);
   }
 
   Color Texture::sample_bilinear(Vector2D uv, int level) {
     // TODO: Task 5: Fill this in.
     auto& mip = mipmap[level];
+    float x(uv.x), y(uv.y);
+    if (x < 0 || x >= this->width) goto fail;
+    if (y < 0 || y >= this->height) goto fail;
+    Color c(Color(0, 0, 0));
+    Color ccc(mip.get_texel(std::ceil(x), std::ceil(y))),
+        cfc(mip.get_texel(std::floor(x), std::ceil(y))),
+        ccf(mip.get_texel(std::ceil(x), std::floor(y))),
+        cff(mip.get_texel(std::floor(x), std::floor(y)));
+    c.r = (ccc.r + cfc.r + ccf.r + cff.r) / 4;
+    c.g = (ccc.g + cfc.g + ccf.g + cff.g) / 4;
+    c.b = (ccc.b + cfc.b + ccf.b + cff.b) / 4;
 
-
-
-
+    return c;
+fail:
     // return magenta for invalid level
     return Color(1, 0, 1);
   }
