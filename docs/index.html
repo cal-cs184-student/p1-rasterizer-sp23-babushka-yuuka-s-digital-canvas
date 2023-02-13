@@ -23,74 +23,199 @@
 
 <body>
 
-<h1 align="middle">CS 184: Computer Graphics and Imaging, Spring 2018</h1>
+<h1 align="middle">CS 184: Computer Graphics and Imaging, Spring 2023</h1>
 <h1 align="middle">Project 1: Rasterizer</h1>
-<h2 align="middle">YOUR NAME, CS184-??</h2>
+<h2 align="middle">Ziqi Shi, Buyi Geng CS184</h2>
 
 <br><br>
 
-<div>
+    <div>
 
-<h2 align="middle">Overview</h2>
-<p>Give a high-level overview of what you implemented in this project. Think about what you've built as a whole. Share your thoughts on what interesting things you've learned from completing the project.</p>
+        <h2 align="middle">Overview</h2>
+        <p>
+            We implemented a software rasterizer that can render 3D models defined in SVG format. The rasterizer is capable of handling triangles, and it performs antialiasing using supersampling and texture mapping using bilinear filtering. We also implemented level sampling for texture mapping, which allows for adjusting the texture resolution. In addition, we updated the "robot.svg" file to create a custom robot doing something interesting, and we created our own SVG files to showcase the features of our rasterizer. Through this project, we learned about the concepts and techniques used in computer graphics, such as rasterization, antialiasing, and texture mapping. We also gained experience working with C++ programming and the SVG file format.
+        </p>
 
-<h2 align="middle">Section I: Rasterization</h2>
+        <h2 align="middle">Section I: Rasterization</h2>
 
-<h3 align="middle">Part 1: Rasterizing single-color triangles</h3>
+        <h3 align="middle">Part 1: Rasterizing single-color triangles</h3>
 
-<p>Here is an example 2x2 gridlike structure using an HTML table. Each <b>tr</b> is a row and each <b>td</b> is a column in that row. You might find this useful for framing and showing your result images in an organized fashion.</p>
+        <p>
+            In task 1, we have implemented a basic rasterization algorithm to fill a triangle with the given color. The implementation uses the Barycentric coordinate system to check if a pixel is inside the triangle. The method first calculates the bounding box for the triangle and then iterates over all the pixels within the box. For each pixel, it checks if the pixel lies within the triangle using the Barycentric coordinates. If the pixel is inside the triangle, the corresponding samples of the pixel in the sample buffer are filled with the given color.
+        </p>
+        <p>
+            The implementation correctly computes the bounding box for the given triangle and iterates over all the pixels within the box. However, the implementation does not correctly compute the Barycentric coordinates for the triangle. Instead, it computes the normal vectors to the edges of the triangle and uses them to calculate the Barycentric coordinates. This approach may not work for triangles with large gradients, and the resulting image may have artifacts or seams.
+        </p>
+        <p>
+            Additionally, the implementation uses supersampling to anti-alias the edges of the triangle. However, it performs only uniform supersampling by dividing each pixel into equal-sized subpixels. It would be better to use a more advanced technique like adaptive supersampling to avoid wasting samples on pixels that are already fully covered by the triangle.
+            Overall, the implementation of the basic triangle rasterization algorithm is a good starting point. Still, it could be improved by computing the Barycentric coordinates more accurately and using a more advanced supersampling technique.
 
-<div align="middle">
-  <table style="width=100%">
-    <tr>
-      <td>
-        <img src="images/image1.png" align="middle" width="400px"/>
-        <figcaption align="middle">Caption goes here.</figcaption>
-      </td>
-      <td>
-        <img src="images/image2.png" align="middle" width="400px"/>
-        <figcaption align="middle">Caption goes here.</figcaption>
-      </td>
-    </tr>
-    <br>
-    <tr>
-      <td>
-        <img src="images/image3.png" align="middle" width="400px"/>
-        <figcaption align="middle">Caption goes here.</figcaption>
-      </td>
-      <td>
-        <img src="images/image4.png" align="middle" width="400px"/>
-        <figcaption align="middle">Caption goes here.</figcaption>
-      </td>
-    </tr>
-  </table>
-</div>
+        </p>
+       
 
-
-<h3 align="middle">Part 2: Antialiasing triangles</h3>
-
-
-
-<h3 align="middle">Part 3: Transforms</h3>
-
-
-
-<h2 align="middle">Section II: Sampling</h2>
-
-<h3 align="middle">Part 4: Barycentric coordinates</h3>
-
-
-<h3 align="middle">Part 5: "Pixel sampling" for texture mapping</h3>
-
-
-<h3 align="middle">Part 6: "Level sampling" with mipmaps for texture mapping</h3>
+        <div align="middle">
+            <table style="width=100%">
+                <tr>
+                    <td>
+                        <img src="images/task 1-1.png" align="middle" width="300px" />
+                        <figcaption align="middle"></figcaption>
+                    </td>
+                    <td>
+                        <img src="images/task 1-2.png" align="middle" width="400px" />
+                        <figcaption align="middle"></figcaption>
+                    </td>
+                </tr>
+                <br />
+                <tr>
+                    <td>
+                        <img src="images/task 1-3.png" align="middle" width="400px" />
+                        <figcaption align="middle"></figcaption>
+                    </td>
+                    <td>
+                        <img src="images/task 1-4.png" align="middle" width="400px" />
+                        <figcaption align="middle"></figcaption>
+                    </td>
+                </tr>
+            </table>
+        </div>
 
 
 
-<h2 align="middle">Section III: Art Competition</h2>
-<p>If you are not participating in the optional art competition, don't worry about this section!</p>
+        <h3 align="middle">Part 2: Antialiasing triangles</h3>
+     
+        <p>
+            Supersampling is a technique used to reduce aliasing artifacts in computer graphics. We implemented a grid-based supersampling algorithm that creates a grid of subpixels within each pixel and evaluates the color of the subpixels to determine the final color of the pixel. Our algorithm uses a 2D array to store the colors of the subpixels.
 
-<h3 align="middle">Part 7: Draw something interesting!</h3>
+        </p>
+        <p>
+            In our implementation, we modified the rasterization pipeline to first render the scene to a high-resolution image, and then downsample the image to the target resolution using the supersampling algorithm. This allows us to accurately capture the fine details of the scene and reduce aliasing artifacts.
+        </p>
+        <p>
+            To antialias triangles, we first determine which subpixels of a pixel are inside the triangle using the same edge equation used for rasterization. We then compute the barycentric coordinates of the subpixel within the triangle, and use these coordinates to interpolate the color of the triangle at that point.
+        </p>
+        <p>
+            We used supersampling to antialias the triangles in the test scenes. The results can be seen in the following screenshots:
+        </p>
 
-</body>
+            <div align="middle">
+                <table style="width=100%">
+                    <tr>
+                        <td>
+                            <img src="images/task 2-1.png" align="middle" width="400px" />
+                            <figcaption align="middle"></figcaption>
+                        </td>
+                        <td>
+                            <img src="images/task 2-2.png" align="middle" width="400px" />
+                            <figcaption align="middle"></figcaption>
+                        </td>
+                    </tr>
+                    <br />
+                    <tr>
+                        <td>
+                            <img src="images/task 2-3.png" align="middle" width="400px" />
+                            <figcaption align="middle"></figcaption>
+                        </td>
+                        <td>
+                            <img src="images/task 2-4.png" align="middle" width="400px" />
+                            <figcaption align="middle"></figcaption>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+
+        </p><p>
+            As we increase the sample rate, the aliasing artifacts become less pronounced and the edges of the triangles become smoother. This is because the additional subpixels allow us to more accurately capture the fine details of the scene and reduce the error in the edge equation.
+        </p>
+
+
+
+
+        <h3 align="middle">Part 3: Transforms</h3>
+        <p>
+            For this task, we updated the transforms.cpp file to include the implementation of the three transforms according to the SVG spec. The translate, scale, and rotate functions were modified to incorporate the correct mathematical operations to perform the respective transformations.
+        </p>
+
+        <p>
+            After successfully implementing these functions, we tested our code on the robot.svg file and were able to render it correctly with the transformed cubeman. We then proceeded to create an updated version of the robot.svg file named my_robot.svg in the docs/ directory.
+        </p>
+
+        <p>
+            In my_robot.svg, we modified the cubeman to depict him running with arms and legs in motion, and also changed his color scheme to blue and yellow. We aimed to create a more dynamic and lively character with this update.
+        </p>
+
+        <p>
+            Finally, we captured a screenshot of the rendered drawing and included it in our write-up. The resulting image displays the transformed and updated cubeman in the center of the image, surrounded by a white background.
+        </p>
+        
+        <p>
+            Overall, this task helped us gain a better understanding of how the various SVG transformations can be applied to manipulate the position, scale, and orientation of shapes in 2D space.
+        </p>
+    
+        <p>
+            Here is a screenshot of the rendered drawing of my_robot.svg:
+        </p>
+
+            <img src="images/task 3.png" align="bottom" width="800px" />
+            <figcaption align="middle"></figcaption>
+
+
+
+
+
+            <h2 align="middle">Section II: Sampling</h2>
+
+            <h3 align="middle">Part 4: Barycentric coordinates</h3>
+       
+            <p>
+                <b>Explaination of barycentric coordinates:</b>  Barycentric coordinates are a way to describe a point inside a triangle in terms of its distance from the triangle's vertices. Specifically, given a point P inside a triangle ABC, its barycentric coordinates (u, v, w) are defined as the ratios of the areas of the three sub-triangles PBC, PCA, and PAB, respectively, to the area of the original triangle ABC.
+            </p>
+        <div align="middle">
+            <table style="width=100%">
+                <tr>
+                    <td>
+                        <img src="images/task 4-1.png" align="middle" width="350px" />
+                        <figcaption align="middle"></figcaption>
+                    </td>
+                    <td>
+                        <img src="images/task 4-2.png" align="middle" width="350px" />
+                        <figcaption align="middle"></figcaption>
+                    </td>
+                </tr>
+                <br />
+                <tr>
+                    <td>
+                        <img src="images/task 4-3.png" align="middle" width="350px" />
+                        <figcaption align="middle"></figcaption>
+                    </td>
+                    <td>
+                        <img src="images/task 4-4.png" align="middle" width="350px" />
+                        <figcaption align="middle"></figcaption>
+                    </td>
+                    <td>
+                        <img src="images/task 4-5.png" align="middle" width="350px" />
+                        <figcaption align="middle"></figcaption>
+                    </td>
+                </tr>
+            </table>
+        </div>
+
+        <p>
+            As we can see, the colors of points inside the triangle are smoothly interpolated between the red, green, and blue vertices. This is because the color at any point can be computed as a weighted average of the vertex colors, where the weights are given by the point's barycentric coordinates.
+        </p>
+
+
+            <h3 align="middle">Part 5: "Pixel sampling" for texture mapping</h3>
+
+
+            <h3 align="middle">Part 6: "Level sampling" with mipmaps for texture mapping</h3>
+
+
+
+            <h2 align="middle">Section III: Art Competition</h2>
+        </p>
+        <p>If you are not participating in the optional art competition, don't worry about this section!</p>
+
+        <h3 align="middle">Part 7: Draw something interesting!</h3>
+
+    </div></body>
 </html>
