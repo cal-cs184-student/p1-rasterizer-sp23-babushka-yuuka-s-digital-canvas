@@ -8,15 +8,60 @@ namespace CGL {
 
   Color Texture::sample(const SampleParams& sp) {
     // TODO: Task 6: Fill this in.
+      Color c(Color(1, 0, 1));
+      float level = get_level(sp);
+      level = (level < 0) ? 0 : level;
+      level = (level > mipmap.size()) ? mipmap.size() : level;
+      switch (sp.lsm)
+      {
+      case CGL::L_ZERO:
+      case CGL::L_NEAREST:
 
-
-// return magenta for invalid level
-    return Color(1, 0, 1);
+          switch (sp.psm)
+          {
+          case CGL::P_NEAREST:
+              c = sample_nearest(sp.p_uv, round(level));
+              break;
+          case CGL::P_LINEAR:
+              c = sample_bilinear(sp.p_uv, round(level));
+              break;
+          }
+          break;
+      case CGL::L_LINEAR:
+          Color c1, c2;
+          switch (sp.psm)
+          {
+          case CGL::P_NEAREST:
+              c1 = sample_nearest(sp.p_uv, floor(level));
+              c2 = sample_nearest(sp.p_uv, ceil(level));
+              c = c2 * (level - floor(level)) + c1 * (ceil(level) - level);
+              break;
+          case CGL::P_LINEAR:
+              c1 = sample_bilinear(sp.p_uv, floor(level));
+              c2 = sample_bilinear(sp.p_uv, ceil(level));
+              c = c2 * (level - floor(level)) + c1 * (ceil(level) - level);
+              break;
+          }
+          break;
+      }
+    return c;
   }
 
   float Texture::get_level(const SampleParams& sp) {
     // TODO: Task 6: Fill this in.
+      switch (sp.lsm)
+      {
+      case CGL::L_ZERO:
+          return 0;
+      case CGL::L_NEAREST:
+      case CGL::L_LINEAR:
+          Vector2D diff_x((sp.p_dx_uv.x - sp.p_uv.x) * (width - 1), (sp.p_dx_uv.y - sp.p_uv.y) * (height - 1));
+          Vector2D diff_y((sp.p_dy_uv.x - sp.p_uv.x) * (width - 1), (sp.p_dy_uv.y - sp.p_uv.y) * (height - 1));
 
+          float L = max(diff_x.norm(), diff_y.norm());
+
+          return log2(L);
+      }
 
 
     return 0;

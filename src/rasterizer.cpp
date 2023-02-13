@@ -224,19 +224,20 @@ namespace CGL {
                           (dota > 0) && (dotb > 0) && (dotc > 0)) {
                           
                           Vector3D tex_coord = Mtex * B_coords;
+                          Vector3D dX(xt + 1, yt, 1);
+                          Vector3D dY(xt, yt + 1, 1);
+                          Vector3D dx_uv = Mtex * M_inv * dX;
+                          Vector3D dy_uv = Mtex * M_inv * dY;
+                          
 
-                          Color c(Color(1, 0, 1));
-                          switch (psm)
-                          {
-                          case CGL::P_NEAREST:
-                              c = tex.sample_nearest(Vector2D(tex_coord.x, tex_coord.y), 0);
-                              break;
-                          case CGL::P_LINEAR:
-                              c = tex.sample_bilinear(Vector2D(tex_coord.x, tex_coord.y), 0);
-                              break;
-                          default:
-                              break;
-                          }
+                          SampleParams sp;
+                          sp.psm = psm;
+                          sp.lsm = lsm;
+                          sp.p_uv = Vector2D(tex_coord.x, tex_coord.y);
+                          sp.p_dx_uv = Vector2D(dx_uv.x, dx_uv.y);
+                          sp.p_dy_uv = Vector2D(dy_uv.x, dy_uv.y);
+
+                          Color c = tex.sample(sp);
 
                           fill_superpixel(x, y, w, c);
                       }
