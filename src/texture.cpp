@@ -34,12 +34,12 @@ namespace CGL {
           case CGL::P_NEAREST:
               c1 = sample_nearest(sp.p_uv, floor(level));
               c2 = sample_nearest(sp.p_uv, ceil(level));
-              c = c2 * (level - floor(level)) + c1 * (ceil(level) - level);
+              c = c2 * 0.5 + c1 * 0.5;
               break;
           case CGL::P_LINEAR:
               c1 = sample_bilinear(sp.p_uv, floor(level));
               c2 = sample_bilinear(sp.p_uv, ceil(level));
-              c = c2 * (level - floor(level)) + c1 * (ceil(level) - level);
+              c = c2 * 0.5 + c1 * 0.5;
               break;
           }
           break;
