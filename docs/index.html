@@ -33,7 +33,8 @@
 
         <h2 align="middle">Overview</h2>
         <p>
-            We implemented a software rasterizer that can render 3D models defined in SVG format. The rasterizer is capable of handling triangles, and it performs antialiasing using supersampling and texture mapping using bilinear filtering. We also implemented level sampling for texture mapping, which allows for adjusting the texture resolution. In addition, we updated the "robot.svg" file to create a custom robot doing something interesting, and we created our own SVG files to showcase the features of our rasterizer. Through this project, we learned about the concepts and techniques used in computer graphics, such as rasterization, antialiasing, and texture mapping. We also gained experience working with C++ programming and the SVG file format.
+            In this project, we implemented a software rasterizer that can take SVG files and render them on the screen. We implemented a basic pipeline, including parsing the SVG files, triangulating the polygons, and rasterizing the triangles. We also implemented a basic shading model that allows us to render triangles with varying colors. Overall, we learned a lot about computer graphics and how to build a software rasterizer from scratch.
+
         </p>
 
         <h2 align="middle">Section I: Rasterization</h2>
@@ -41,17 +42,18 @@
         <h3 align="middle">Part 1: Rasterizing single-color triangles</h3>
 
         <p>
-            In task 1, we have implemented a basic rasterization algorithm to fill a triangle with the given color. The implementation uses the Barycentric coordinate system to check if a pixel is inside the triangle. The method first calculates the bounding box for the triangle and then iterates over all the pixels within the box. For each pixel, it checks if the pixel lies within the triangle using the Barycentric coordinates. If the pixel is inside the triangle, the corresponding samples of the pixel in the sample buffer are filled with the given color.
+            To rasterize triangles, we first iterate over the bounding box of the triangle and check each pixel to see if it lies inside the triangle. We then calculate the barycentric coordinates of the pixel with respect to the triangle using a point-in-triangle test. If all three barycentric coordinates are non-negative, then the pixel lies inside the triangle. We then calculate the sample point in the center of the pixel and call the fill_pixel() function to draw the pixel with the triangle's color.
         </p>
         <p>
-            The implementation correctly computes the bounding box for the given triangle and iterates over all the pixels within the box. However, the implementation does not correctly compute the Barycentric coordinates for the triangle. Instead, it computes the normal vectors to the edges of the triangle and uses them to calculate the Barycentric coordinates. This approach may not work for triangles with large gradients, and the resulting image may have artifacts or seams.
+            Our algorithm is no worse than one that checks each sample within the bounding box of the triangle because we only calculate the barycentric coordinates for the pixels that lie inside the triangle. This means that we only need to calculate the barycentric coordinates for a fraction of the pixels in the bounding box, which is more efficient than checking every sample point within the bounding box.
+
         </p>
         <p>
             Additionally, the implementation uses supersampling to anti-alias the edges of the triangle. However, it performs only uniform supersampling by dividing each pixel into equal-sized subpixels. It would be better to use a more advanced technique like adaptive supersampling to avoid wasting samples on pixels that are already fully covered by the triangle.
             Overall, the implementation of the basic triangle rasterization algorithm is a good starting point. Still, it could be improved by computing the Barycentric coordinates more accurately and using a more advanced supersampling technique.
 
         </p>
-       
+
 
         <div align="middle">
             <table style="width=100%">
@@ -82,7 +84,7 @@
 
 
         <h3 align="middle">Part 2: Antialiasing triangles</h3>
-     
+
         <p>
             Supersampling is a technique used to reduce aliasing artifacts in computer graphics. We implemented a grid-based supersampling algorithm that creates a grid of subpixels within each pixel and evaluates the color of the subpixels to determine the final color of the pixel. Our algorithm uses a 2D array to store the colors of the subpixels.
 
@@ -97,31 +99,31 @@
             We used supersampling to antialias the triangles in the test scenes. The results can be seen in the following screenshots:
         </p>
 
-            <div align="middle">
-                <table style="width=100%">
-                    <tr>
-                        <td>
-                            <img src="images/task 2-1.png" align="middle" width="400px" />
-                            <figcaption align="middle"></figcaption>
-                        </td>
-                        <td>
-                            <img src="images/task 2-2.png" align="middle" width="400px" />
-                            <figcaption align="middle"></figcaption>
-                        </td>
-                    </tr>
-                    <br />
-                    <tr>
-                        <td>
-                            <img src="images/task 2-3.png" align="middle" width="400px" />
-                            <figcaption align="middle"></figcaption>
-                        </td>
-                        <td>
-                            <img src="images/task 2-4.png" align="middle" width="400px" />
-                            <figcaption align="middle"></figcaption>
-                        </td>
-                    </tr>
-                </table>
-            </div>
+        <div align="middle">
+            <table style="width=100%">
+                <tr>
+                    <td>
+                        <img src="images/task 2-1.png" align="middle" width="400px" />
+                        <figcaption align="middle"></figcaption>
+                    </td>
+                    <td>
+                        <img src="images/task 2-2.png" align="middle" width="400px" />
+                        <figcaption align="middle"></figcaption>
+                    </td>
+                </tr>
+                <br />
+                <tr>
+                    <td>
+                        <img src="images/task 2-3.png" align="middle" width="400px" />
+                        <figcaption align="middle"></figcaption>
+                    </td>
+                    <td>
+                        <img src="images/task 2-4.png" align="middle" width="400px" />
+                        <figcaption align="middle"></figcaption>
+                    </td>
+                </tr>
+            </table>
+        </div>
 
 
         </p><p>
@@ -133,43 +135,93 @@
 
         <h3 align="middle">Part 3: Transforms</h3>
         <p>
-            For this task, we updated the transforms.cpp file to include the implementation of the three transforms according to the SVG spec. The translate, scale, and rotate functions were modified to incorporate the correct mathematical operations to perform the respective transformations.
+            In Task 3, we were required to implement three transforms in the transforms.cpp file according to the SVG spec. These transforms were translate, scale, and rotate, and they operate in homogeneous coordinates, which means that they are 3x3 matrices. We were able to see how these matrices would be used on instances of Vector2D by looking at the way the * operator is overloaded in the same file.
         </p>
 
         <p>
-            After successfully implementing these functions, we tested our code on the robot.svg file and were able to render it correctly with the transformed cubeman. We then proceeded to create an updated version of the robot.svg file named my_robot.svg in the docs/ directory.
+            To implement the translate transform, we filled in the code for the translate() function, which takes in two float arguments, dx and dy, and returns a Matrix3x3 object that represents the translation matrix. We created this matrix by setting the appropriate values in the matrix to the corresponding values for a translation matrix.
+
         </p>
 
         <p>
-            In my_robot.svg, we modified the cubeman to depict him running with arms and legs in motion, and also changed his color scheme to blue and yellow. We aimed to create a more dynamic and lively character with this update.
+            For the scale transform, we filled in the code for the scale() function, which takes in two float arguments, sx and sy, and returns a Matrix3x3 object that represents the scaling matrix. We created this matrix by setting the appropriate values in the matrix to the corresponding values for a scaling matrix.
+
         </p>
 
         <p>
-            Finally, we captured a screenshot of the rendered drawing and included it in our write-up. The resulting image displays the transformed and updated cubeman in the center of the image, surrounded by a white background.
+            For the rotate transform, we filled in the code for the rotate() function, which takes in one float argument, deg, and returns a Matrix3x3 object that represents the rotation matrix. We created this matrix by using the sine and cosine of the input argument, which is in degrees counterclockwise, and setting the appropriate values in the matrix to the corresponding values for a rotation matrix.
+
         </p>
-        
+
         <p>
-            Overall, this task helped us gain a better understanding of how the various SVG transformations can be applied to manipulate the position, scale, and orientation of shapes in 2D space.
+            With these transforms implemented, the robot.svg file should render correctly. The robot in the file will now be able to move and change size and orientation according to the transforms that we have implemented.
+
         </p>
-    
+
         <p>
+            Overall, this task helped us gain a better understanding of how SVG transforms work and how they can be implemented using matrices in C++.
+
+
+
             Here is a screenshot of the rendered drawing of my_robot.svg:
         </p>
 
-            <img src="images/task 3.png" align="bottom" width="800px" />
-            <figcaption align="middle"></figcaption>
+        <img src="images/task 3.png" align="bottom" width="800px" />
+        <figcaption align="middle"></figcaption>
 
 
 
 
 
-            <h2 align="middle">Section II: Sampling</h2>
+        <h2 align="middle">Section II: Sampling</h2>
 
-            <h3 align="middle">Part 4: Barycentric coordinates</h3>
-       
-            <p>
-                <b>Explaination of barycentric coordinates:</b>  Barycentric coordinates are a way to describe a point inside a triangle in terms of its distance from the triangle's vertices. Specifically, given a point P inside a triangle ABC, its barycentric coordinates (u, v, w) are defined as the ratios of the areas of the three sub-triangles PBC, PCA, and PAB, respectively, to the area of the original triangle ABC.
-            </p>
+        <h3 align="middle">Part 4: Barycentric coordinates</h3>
+
+        <p>
+            <b>Explaination of barycentric coordinates:</b> Barycentric interpolation is a technique used to interpolate values across a triangle by expressing the value at any point in the triangle as a linear combination of the values at the vertices of the triangle. In our case, we want to interpolate the color values at each vertex of a triangle and fill the triangle with the interpolated colors.
+
+
+        </p>
+        <p>
+            The RasterizerImp::rasterize_interpolated_color_triangle() function takes in three arguments, three vertices of the triangle and three colors, one for each vertex. In order to interpolate the color values across the triangle, we need to calculate the color value at each pixel in the triangle. This can be done by calculating the barycentric coordinates of each pixel and using those coordinates to interpolate the color values at each vertex.
+        </p>
+        <p>
+            The barycentric coordinates of a point inside a triangle are the weights of the vertices that add up to 1. So for a point P in the triangle ABC, the barycentric coordinates are (u, v, w), where:
+        </p>
+
+        <style>
+            .centered {
+                text-align: center;
+                font-size: 24px;
+                font-weight: bold;
+                color: black;
+            }
+        </style>
+
+        <div class="centered">u + v = 1</div>
+
+        <p>
+            To calculate the barycentric coordinates of a point, we can use the following formula:
+        </p>
+        <div style="text-align: center;">
+            <div>u = \frac{(v_2 - v_3)(x - x_3) + (u_3 - u_2)(y - y_3)}{(v_2 - v_3)(u_1 - u_3) + (u_3 - u_2)(v_1 - v_3)}</div>
+            <div>v = \frac{(v_3 - v_1)(x - x_3) + (u_1 - u_3)(y - y_3)}{(v_2 - v_3)(u_1 - u_3) + (u_3 - u_2)(v_1 - v_3)}</div>
+            <div>w = 1 - u - v</div>
+        </div>
+
+
+        <p>
+            Once we have the barycentric coordinates for a point, we can use them to interpolate the color values at each vertex. We do this by multiplying each color value by its corresponding barycentric coordinate and then summing the results. This gives us the interpolated color value at the point.
+
+        </p>
+        <p>
+            We then use the set_pixel() function to set the color of the pixel to the interpolated color value.
+        </p>
+        <p>
+            After implementing the barycentric interpolation for color values, we can render svg/basic/test7.svg and see a color wheel where the colors are interpolated across the triangle area using barycentric interpolation.
+        </p>
+
+
         <div align="middle">
             <table style="width=100%">
                 <tr>
@@ -200,12 +252,108 @@
             </table>
         </div>
 
-        <p>
+        </p><p>
             As we can see, the colors of points inside the triangle are smoothly interpolated between the red, green, and blue vertices. This is because the color at any point can be computed as a weighted average of the vertex colors, where the weights are given by the point's barycentric coordinates.
         </p>
 
 
-            <h3 align="middle">Part 5: "Pixel sampling" for texture mapping</h3>
+        <h3 align="middle">Part 5: "Pixel sampling" for texture mapping</h3>
+        <p>
+            Pixel sampling refers to the process of determining the color value of a pixel on the output image based on the color values of one or more pixels on the input texture image. In texture mapping, pixel sampling is used to determine the color of a point on a triangle that is being textured by mapping a 2D texture image onto it.
+
+        </p>
+        <p>
+            In our implementation, we perform texture mapping by using the 2D texture coordinates at each vertex and the given Texture image to determine the color of the pixel. We use the PixelSampleMethod variable psm in RasterizerImp to toggle between two different pixel sampling methods, nearest neighbor and bilinear interpolation. When psm == P_NEAREST, we use nearest-pixel sampling, and when psm == P_LINEAR, we use bilinear sampling.
+        </p>
+        <p>
+            To implement nearest-pixel sampling, we use the Texture::sample_nearest function. This function returns the color value of the nearest texel (texture pixel) to the specified texture coordinate. To implement bilinear sampling, we use the Texture::sample_bilinear function. This function computes the weighted average of the colors of the four texels surrounding the specified texture coordinate.
+        </p>
+        <p>
+            The two pixel sampling methods have different trade-offs. Nearest-pixel sampling is faster but produces pixelated results, while bilinear interpolation produces smoother results but is slower. In general, bilinear sampling is preferred when there are visible differences between adjacent texels, as it provides a smoother transition between them. Nearest-pixel sampling may be preferred when the texture is intentionally pixelated, or when the texture is viewed from a distance where the differences between adjacent texels are not noticeable.
+        </p>
+        <p>
+            To compare the differences between the two methods, we can look at the svg files in the svg/texmap/ directory using the pixel inspector. One good example of where bilinear sampling clearly defeats nearest sampling is the "lego.svg" file. In this file, the texture of the bricks in the background is very pixelated, and nearest-pixel sampling produces very noticeable artifacts. In contrast, bilinear sampling produces a much smoother and more natural-looking result.
+        </p>
+        <p>
+            Here are the png screenshots we will compare:
+        </p>
+
+        <div align="middle">
+            <table style="width=100%">
+                <tr>
+                    <td>
+                        <img src="images/Task5_bilinear_r1p1.png" align="middle" width="200px" />
+                        <figcaption align="middle"></figcaption>
+                    </td>
+                    <td>
+                        <img src="images/Task5_bilinear_r1p2.png" align="middle" width="200px" />
+                        <figcaption align="middle"></figcaption>
+                    </td>
+                    <td>
+                        <img src="images/Task5_bilinear_r1p3.png" align="middle" width="200px" />
+                        <figcaption align="middle"></figcaption>
+                    </td>
+                    <td>
+                        <img src="images/Task5_bilinear_r1p4.png" align="middle" width="200px" />
+                        <figcaption align="middle"></figcaption>
+                    </td>
+                    <td>
+                        <img src="images/Task5_bilinear_r1p5.png" align="middle" width="200px" />
+                        <figcaption align="middle"></figcaption>
+                    </td>
+                    <td>
+                        <img src="images/Task5_bilinear_r16p5.png" align="middle" width="200px" />
+                        <figcaption align="middle"></figcaption>
+                    </td>
+                </tr>
+                <br />
+                <tr>
+
+                    <td>
+                        <img src="images/Task5_nearest_r1p1.png" align="middle" width="200px" />
+                        <figcaption align="middle"></figcaption>
+                    </td>
+                    <td>
+                        <img src="images/Task5_nearest_r1p2.png" align="middle" width="200px" />
+                        <figcaption align="middle"></figcaption>
+                    </td>
+                    <td>
+                        <img src="images/Task5_nearest_r1p3.png" align="middle" width="200px" />
+                        <figcaption align="middle"></figcaption>
+                    </td>
+                    <td>
+                        <img src="images/Task5_nearest_r1p4.png" align="middle" width="200px" />
+                        <figcaption align="middle"></figcaption>
+                    </td>
+                    <td>
+                        <img src="images/Task5_nearest_r1p5.png" align="middle" width="200px" />
+                        <figcaption align="middle"></figcaption>
+                    </td>
+                    <td>
+                        <img src="images/Task5_nearest_r16p5.png" align="middle" width="200px" />
+                        <figcaption align="middle"></figcaption>
+                    </td>
+                </tr>
+            </table>
+        </div>
+
+        <p>
+            As expected, nearest-pixel sampling produces very pixelated results, especially at low sample rates. Bilinear interpolation produces much smoother results, especially at high sample rates. The differences between the two methods are most noticeable in areas with sharp changes in color or detail, such as the edges of the bricks in the "lego.svg" file.
+        </p>
+        <p>
+            In general, bilinear sampling is preferred for texture mapping, as it provides a smoother and more natural-looking result. However, it is also slower than nearest-pixel sampling, so nearest-pixel sampling may be preferred in situations where speed is more important than visual quality, or where the texture is intentionally pixelated.
+        </p>
+
+
+
+
+
+
+
+
+
+
+
 
 
             <h3 align="middle">Part 6: "Level sampling" with mipmaps for texture mapping</h3>
