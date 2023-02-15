@@ -166,7 +166,7 @@
             Here is a screenshot of the rendered drawing of my_robot.svg:
         </p>
 
-        <img src="images/task 3.png" align="bottom" width="800px" />
+        <img src="images/task 3-2.png" align="bottom" width="800px" />
         <figcaption align="middle"></figcaption>
 
 
@@ -349,18 +349,55 @@
 
 
 
+        <h3 align="middle">Part 6: "Level sampling" with mipmaps for texture mapping</h3>
+        <p>
+            Level sampling, also known as Mipmapping, is a technique used in computer graphics to increase rendering efficiency and reduce aliasing artifacts. It involves precomputing and storing scaled-down versions of the texture image called Mipmaps. When sampling the texture, the appropriate mipmap level is chosen based on the amount of texture detail needed for a given pixel. In Rasterization, this is achieved by computing the mipmap level using the partial derivatives of texture coordinates with respect to screen coordinates.
+        </p>
+        <p>
+            In Task 6, I implemented level sampling by modifying the Texture::sample function. When LevelSampleMethod is set to L_ZERO, the function samples the full-resolution texture image using either nearest or bilinear sampling, depending on the PixelSampleMethod. When LevelSampleMethod is set to L_NEAREST, the function computes the nearest mipmap level based on the screen-space derivatives and then performs either nearest or bilinear sampling using the selected PixelSampleMethod. When LevelSampleMethod is set to L_LINEAR, the function computes a weighted average of samples from adjacent mipmap levels using the screen-space derivatives and then performs bilinear sampling.
+        </p>
+        <p>
+            The tradeoffs between the three sampling techniques are primarily speed, memory usage, and antialiasing power. Pixel sampling at a high sample rate results in the highest quality images but is the slowest and uses the most memory. Level sampling is faster and uses less memory but produces lower quality images. In particular, nearest level sampling can result in texture flickering and sharp transitions between levels, while linear level sampling can produce blurrier images due to blending between levels.
+        </p>
+        <div align="middle">
+            <table style="width=100%">
+                <tr>
+                    <td>
+                        <img src="images/Task6_L0_PL.png" align="middle" width="300px" />
+                        <figcaption align="middle"></figcaption>
+                    </td>
+                    <td>
+                        <img src="images/Task6_L0_PN.png" align="middle" width="300px" />
+                        <figcaption align="middle"></figcaption>
+                    </td>
+                    <td>
+                        <img src="images/Task6_LL_PL.png" align="middle" width="300px" />
+                        <figcaption align="middle"></figcaption>
+                    </td>
+                </tr>
+                <br />
+                <tr>
+                    <td>
+                        <img src="images/Task6_LL_PN.png" align="middle" width="300px" />
+                        <figcaption align="middle"></figcaption>
+                    </td>
+                    <td>
+                        <img src="images/Task6_LN_PL.png" align="middle" width="300px" />
+                        <figcaption align="middle"></figcaption>
+                    </td>
+                    <td>
+                        <img src="images/Task6_LN_PN.png" align="middle" width="300px" />
+                        <figcaption align="middle"></figcaption>
+                    </td>
+                </tr>
+            </table>
+        </div>
 
 
 
 
 
-
-
-            <h3 align="middle">Part 6: "Level sampling" with mipmaps for texture mapping</h3>
-
-
-
-            <h2 align="middle">Section III: Art Competition</h2>
+        <h2 align="middle">Section III: Art Competition</h2>
         </p>
         <p>If you are not participating in the optional art competition, don't worry about this section!</p>
 
