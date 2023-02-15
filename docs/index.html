@@ -32,7 +32,7 @@
     <div>
 
         <h2 align="middle">Overview</h2>
-        <p>
+        <p style="max-width:1000px;">
             In this project, we implemented a software rasterizer that can take SVG files and render them on the screen. We implemented a basic pipeline, including parsing the SVG files, triangulating the polygons, and rasterizing the triangles. We also implemented a basic shading model that allows us to render triangles with varying colors. Overall, we learned a lot about computer graphics and how to build a software rasterizer from scratch.
 
         </p>
@@ -104,22 +104,22 @@
                 <tr>
                     <td>
                         <img src="images/task 2-1.png" align="middle" width="400px" />
-                        <figcaption align="middle"></figcaption>
+                        <figcaption align="middle">1xSS (No SS)</figcaption>
                     </td>
                     <td>
                         <img src="images/task 2-2.png" align="middle" width="400px" />
-                        <figcaption align="middle"></figcaption>
+                        <figcaption align="middle">4xSS</figcaption>
                     </td>
                 </tr>
                 <br />
                 <tr>
                     <td>
                         <img src="images/task 2-3.png" align="middle" width="400px" />
-                        <figcaption align="middle"></figcaption>
+                        <figcaption align="middle">9xSS</figcaption>
                     </td>
                     <td>
                         <img src="images/task 2-4.png" align="middle" width="400px" />
-                        <figcaption align="middle"></figcaption>
+                        <figcaption align="middle">16xSS</figcaption>
                     </td>
                 </tr>
             </table>
@@ -158,17 +158,23 @@
 
         </p>
 
+        <img src="images/task 3.png" align="middle" width="800px" />
+        <figcaption align="middle">Original robot.svg rendered correctly</figcaption>
+
         <p>
             Overall, this task helped us gain a better understanding of how SVG transforms work and how they can be implemented using matrices in C++.
 
 
 
-            Here is a screenshot of the rendered drawing of my_robot.svg:
+            Here, by only changing the scaling, translation, and rotation of the original robot.svg, we were able to make the robot look more sus:
         </p>
 
-        <img src="images/task 3-2.png" align="bottom" width="800px" />
-        <figcaption align="middle"></figcaption>
+        <img src="images/task 3-2.png" align="middle" width="800px" />
+        <figcaption align="middle">robot.svg after custom tranformation</figcaption>
 
+        <p>
+            Details of modification can be seen in svg/transforms/robot_transformed.svg.
+        </p>
 
 
 
@@ -227,26 +233,26 @@
                 <tr>
                     <td>
                         <img src="images/task 4-1.png" align="middle" width="350px" />
-                        <figcaption align="middle"></figcaption>
+                        <figcaption align="middle">1xSS(No SS)</figcaption>
                     </td>
                     <td>
                         <img src="images/task 4-2.png" align="middle" width="350px" />
-                        <figcaption align="middle"></figcaption>
+                        <figcaption align="middle">4xSS</figcaption>
                     </td>
                 </tr>
                 <br />
                 <tr>
                     <td>
                         <img src="images/task 4-3.png" align="middle" width="350px" />
-                        <figcaption align="middle"></figcaption>
+                        <figcaption align="middle">9xSS</figcaption>
                     </td>
                     <td>
                         <img src="images/task 4-4.png" align="middle" width="350px" />
-                        <figcaption align="middle"></figcaption>
+                        <figcaption align="middle">16xSS</figcaption>
                     </td>
                     <td>
                         <img src="images/task 4-5.png" align="middle" width="350px" />
-                        <figcaption align="middle"></figcaption>
+                        <figcaption align="middle">Triangle with R, G, B on vertices</figcaption>
                     </td>
                 </tr>
             </table>
@@ -283,55 +289,69 @@
                 <tr>
                     <td>
                         <img src="images/Task5_bilinear_r1p1.png" align="middle" width="200px" />
-                        <figcaption align="middle"></figcaption>
+                        <figcaption align="middle">Picture 1 bilinear,1xss</figcaption>
                     </td>
                     <td>
                         <img src="images/Task5_bilinear_r1p2.png" align="middle" width="200px" />
-                        <figcaption align="middle"></figcaption>
+                        <figcaption align="middle">Picture 2 bilinear,1xss</figcaption>
                     </td>
                     <td>
                         <img src="images/Task5_bilinear_r1p3.png" align="middle" width="200px" />
-                        <figcaption align="middle"></figcaption>
+                        <figcaption align="middle">Picture 3 bilinear,1xss</figcaption>
                     </td>
                     <td>
                         <img src="images/Task5_bilinear_r1p4.png" align="middle" width="200px" />
-                        <figcaption align="middle"></figcaption>
-                    </td>
-                    <td>
-                        <img src="images/Task5_bilinear_r1p5.png" align="middle" width="200px" />
-                        <figcaption align="middle"></figcaption>
-                    </td>
-                    <td>
-                        <img src="images/Task5_bilinear_r16p5.png" align="middle" width="200px" />
-                        <figcaption align="middle"></figcaption>
+                        <figcaption align="middle">Picture 4 bilinear,1xss</figcaption>
                     </td>
                 </tr>
                 <br />
                 <tr>
 
                     <td>
-                        <img src="images/Task5_nearest_r1p1.png" align="middle" width="200px" />
-                        <figcaption align="middle"></figcaption>
+                        <img src="images/Task5_nearest_r1p1.png" align="middle" width="200px"
+                             alt="Picture 1 in nearest pixel sampling with 1x supersample" />
+                        <figcaption align="middle">Picture 1 nearest,1xss</figcaption>
                     </td>
                     <td>
-                        <img src="images/Task5_nearest_r1p2.png" align="middle" width="200px" />
-                        <figcaption align="middle"></figcaption>
+                        <img src="images/Task5_nearest_r1p2.png" align="middle" width="200px"
+                             alt="Picture 2 in nearest pixel sampling with 1x supersample" />
+                        <figcaption align="middle">Picture 2 nearest,1xss</figcaption>
                     </td>
                     <td>
-                        <img src="images/Task5_nearest_r1p3.png" align="middle" width="200px" />
-                        <figcaption align="middle"></figcaption>
+                        <img src="images/Task5_nearest_r1p3.png" align="middle" width="200px"
+                             alt="Picture 3 in nearest pixel sampling with 1x supersample" />
+                        <figcaption align="middle">Picture 3 nearest,1xss</figcaption>
                     </td>
                     <td>
-                        <img src="images/Task5_nearest_r1p4.png" align="middle" width="200px" />
-                        <figcaption align="middle"></figcaption>
+                        <img src="images/Task5_nearest_r1p4.png" align="middle" width="200px"
+                             alt="Picture 4 in nearest pixel sampling with 1x supersample" />
+                        <figcaption align="middle">Picture 4 nearest,1xss</figcaption>
+                    </td>
+                </tr>
+            </table>
+        </div>
+
+        <div align="middle">
+            <table style="width=100%">
+                <tr>
+                    <td>
+                        <img src="images/Task5_bilinear_r1p5.png" align="middle" width="400px" />
+                        <figcaption align="middle">Picture 5 bilinear,1xss</figcaption>
                     </td>
                     <td>
-                        <img src="images/Task5_nearest_r1p5.png" align="middle" width="200px" />
-                        <figcaption align="middle"></figcaption>
+                        <img src="images/Task5_bilinear_r16p5.png" align="middle" width="400px" />
+                        <figcaption align="middle">Picture 5 bilinear,16xss</figcaption>
+                    </td>
+                </tr>
+                <br />
+                <tr>
+                    <td>
+                        <img src="images/Task5_nearest_r1p5.png" align="middle" width="400px" />
+                        <figcaption align="middle">Picture 5 nearest,1xss</figcaption>
                     </td>
                     <td>
-                        <img src="images/Task5_nearest_r16p5.png" align="middle" width="200px" />
-                        <figcaption align="middle"></figcaption>
+                        <img src="images/Task5_nearest_r16p5.png" align="middle" width="400px" />
+                        <figcaption align="middle">Picture 5 nearest,16xss</figcaption>
                     </td>
                 </tr>
             </table>
@@ -359,51 +379,50 @@
         <p>
             The tradeoffs between the three sampling techniques are primarily speed, memory usage, and antialiasing power. Pixel sampling at a high sample rate results in the highest quality images but is the slowest and uses the most memory. Level sampling is faster and uses less memory but produces lower quality images. In particular, nearest level sampling can result in texture flickering and sharp transitions between levels, while linear level sampling can produce blurrier images due to blending between levels.
         </p>
+        <p>
+            The rendering results of all 6 Mipmap leveling and Texture sampling methods are displayed in the grid below. Captions describes the specific recipe.
+        </p>
+        <br />
         <div align="middle">
             <table style="width=100%">
                 <tr>
                     <td>
                         <img src="images/Task6_L0_PL.png" align="middle" width="300px" />
-                        <figcaption align="middle"></figcaption>
+                        <figcaption align="middle">Level 0 Mipmap + Linear Sampling</figcaption>
                     </td>
                     <td>
-                        <img src="images/Task6_L0_PN.png" align="middle" width="300px" />
-                        <figcaption align="middle"></figcaption>
+                        <img src="images/Task6_LN_PL.png" align="middle" width="300px" />
+                        <figcaption align="middle">Nearest Level Mipmap + Linear Sampling</figcaption>
                     </td>
                     <td>
                         <img src="images/Task6_LL_PL.png" align="middle" width="300px" />
-                        <figcaption align="middle"></figcaption>
+                        <figcaption align="middle">Trilinear Sampling</figcaption>
                     </td>
                 </tr>
                 <br />
                 <tr>
                     <td>
                         <img src="images/Task6_LL_PN.png" align="middle" width="300px" />
-                        <figcaption align="middle"></figcaption>
+                        <figcaption align="middle">Level 0 Mipmap + Nearest Pixel</figcaption>
                     </td>
                     <td>
-                        <img src="images/Task6_LN_PL.png" align="middle" width="300px" />
-                        <figcaption align="middle"></figcaption>
+                        <img src="images/Task6_L0_PN.png" align="middle" width="300px" />
+                        <figcaption align="middle">Nearest Level Mipmap + Nearest Pixel</figcaption>
                     </td>
                     <td>
                         <img src="images/Task6_LN_PN.png" align="middle" width="300px" />
-                        <figcaption align="middle"></figcaption>
+                        <figcaption align="middle">Linear Level Mipmap + Nearest Pixel</figcaption>
                     </td>
                 </tr>
             </table>
         </div>
+
+
+        <h3 align="middle">Github Live Webpage</h3>
         <p>
-            webpage:https://cal-cs184-student.github.io/p1-rasterizer-sp23-babushka-yuuka-s-digital-canvas/
+            Webpage: https://cal-cs184-student.github.io/p1-rasterizer-sp23-babushka-yuuka-s-digital-canvas/
         </p>
 
-
-
-
-            <h2 align="middle">Section III: Art Competition</h2>
-        </p>
-        <p>If you are not participating in the optional art competition, don't worry about this section!</p>
-
-        <h3 align="middle">Part 7: Draw something interesting!</h3>
-
+        </table>
     </div></body>
 </html>
